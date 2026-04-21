@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s http://localhost:3000 > /dev/null && echo \"up\" || echo \"down\")",
+      "Bash(cd C:/Users/morgh/Documents/portfolio && npx next build 2>&1 | tail -30)",
+      "Bash(cd C:/Users/morgh/Documents/portfolio && npx tsc --noEmit 2>&1)",
+      "Bash(grep -o \"question: '[^']*DO YOU GO BACK TO THEM[^']*'\" \"C:\\\\Users\\\\morgh\\\\.claude\\\\projects\\\\C--Users-morgh-Documents-portfolio\\\\69ac2ee6-4fd3-447c-b2c2-ccfd624d3141.jsonl\")",
+      "Bash(perl -ne 'if \\(/DO YOU BELIEVE THINGS THAT HAVE ENDED/\\) { print; while \\(<>\\) { print; last if /StoryNode|export const END_MESSAGE/ } }' \"C:\\\\Users\\\\morgh\\\\.claude\\\\projects\\\\C--Users-morgh-Documents-portfolio\\\\69ac2ee6-4fd3-447c-b2c2-ccfd624d3141.jsonl\" | head -200)",
+      "Bash(for pattern:*)",
+      "Bash(for line_num in 905 907 924; do\n  echo \"=== Checking Line $line_num ===\"\n  sed -n \"${line_num}p\" \"C:\\\\Users\\\\morgh\\\\.claude\\\\projects\\\\C--Users-morgh-Documents-portfolio\\\\69ac2ee6-4fd3-447c-b2c2-ccfd624d3141.jsonl\" | grep -q \"export const STORY\" && echo \"Contains STORY definition\" || echo \"No STORY definition\"\ndone)",
+      "Bash(cd \"C:/Users/morgh/Documents/portfolio\" && npx next lint 2>&1 | tail -30)",
+      "Bash(cd \"C:/Users/morgh/Documents/portfolio\" && npx eslint src --ext .ts,.tsx 2>&1 | tail -30)",
+      "Bash(cd C:/Users/morgh/Documents/portfolio && node -e \"\nconst fs = require\\('fs'\\);\nconst path = require\\('path'\\);\nconst files = fs.readdirSync\\('public/products'\\).filter\\(f => f.endsWith\\('.png'\\)\\);\nfiles.forEach\\(f => {\n  const buf = fs.readFileSync\\('public/products/' + f\\);\n  // PNG dimensions are at bytes 16-24\n  const w = buf.readUInt32BE\\(16\\);\n  const h = buf.readUInt32BE\\(20\\);\n  console.log\\(f, w + 'x' + h\\);\n}\\);\n\")",
+      "Bash(cd C:/Users/morgh/Documents/portfolio && node -e \"\nconst fs = require\\('fs'\\);\nconst data = JSON.parse\\(fs.readFileSync\\('src/data/products.json', 'utf8'\\)\\);\ndata.products.forEach\\(p => p.price = 34.00\\);\nfs.writeFileSync\\('src/data/products.json', JSON.stringify\\(data, null, 2\\)\\);\nconsole.log\\('done'\\);\n\")",
+      "Bash(find C:/Users/morgh/Documents/portfolio -name \"shirts*\" -o -name \"*shirts*\" 2>/dev/null | grep -v node_modules | grep -v .next)",
+      "Read(//c/Users/morgh/OneDrive/morgan personal/desktop/**)",
+      "Bash(mkdir -p /c/Users/morgh/Documents/portfolio/ascii/app/scatter)",
+      "Bash(cp /c/Users/morgh/Documents/portfolio/ascii/app/projects/page.tsx /c/Users/morgh/Documents/portfolio/ascii/app/scatter/page.tsx)",
+      "Bash(xargs grep:*)",
+      "Bash(xargs sed:*)",
+      "WebFetch(domain:morghirosky.wixsite.com)",
+      "Bash(npm run *)"
+    ]
+  }
+}

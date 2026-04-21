@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/morgh/Documents/portfolio/**)",
+      "Bash(npx create-next-app@latest book-portfolio --typescript --tailwind --eslint --app --no-src-dir --import-alias \"@/*\")",
+      "Bash(printf \"No\\\\nNo\\\\n\")",
+      "Bash(npm install:*)",
+      "Bash(npx skills:*)",
+      "Bash(python -m pip install Pillow -q)",
+      "Bash(python -c \"import PIL; print\\(''Pillow ready''\\)\")",
+      "Bash(python:*)",
+      "Bash(mkdir -p \"C:/Users/morgh/Documents/portfolio/ascii/public/sprites\")",
+      "Bash(cp \"C:/Users/morgh/Downloads/bunny.png\" \"C:/Users/morgh/Documents/portfolio/ascii/public/sprites/bunny.png\")",
+      "Bash(cp \"C:/Users/morgh/Downloads/tooth.png\" \"C:/Users/morgh/Documents/portfolio/ascii/public/sprites/tooth.png\")"
+    ]
+  }
+}

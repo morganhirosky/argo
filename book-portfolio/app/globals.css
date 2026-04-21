@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Lancelot&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000e1a;
+}

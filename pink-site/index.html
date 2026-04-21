@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>morgan hirosky</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html, body { height: 100%; }
+
+body {
+  background: #080808;
+  color: #f0ece4;
+  font-family: 'Space Mono', monospace;
+  cursor: none;
+  overflow: hidden;
+  perspective: 1400px;
+  perspective-origin: 50% 50%;
+}
+
+/* CURSOR */
+#cursor-dot {
+  position: fixed; width: 7px; height: 7px;
+  background: #f0ece4; border-radius: 50%;
+  pointer-events: none; z-index: 99999;
+  transform: translate(-50%,-50%);
+  transition: width 0.15s, height 0.15s, background 0.15s;
+}
+body.hovering #cursor-dot { width: 12px; height: 12px; background: #e01a00; }
+body.clicking #cursor-dot { width: 4px; height: 4px; }
+.ink-drop {
+  position: fixed; border-radius: 50%; pointer-events: none; z-index: 99997;
+  background: #f0ece4; transform: translate(-50%,-50%) scale(1);
+  transition: transform 0.65s ease-out, opacity 0.65s ease-out;
+}
+
+/* PAGES — all stacked, flip via rotateY */
+.page {
+  position: fixed; inset: 0;
+  visibility: hidden; pointer-events: none;
+  will-change: transform;
+  overflow-y: auto; overflow-x: hidden;
+}
+.page.active    { visibility: visible; pointer-events: auto; }
+.page.flipping  { visibility: visible; }
+
+/* COVER */
+#page-cover {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background:
+    repeating-linear-gradient(
+      18deg, rgba(0,0,0,0.028) 0px, rgba(0,0,0,0.028) 1px,
+      transparent 1px, transparent 6px
+    ),
+    repeating-linear-gradient(
+      -18deg, rgba(0,0,0,0.02) 0px, rgba(0,0,0,0.02) 1px,
+      transparent 1px, transparent 6px
+    ),
+    radial-gradient(ellipse at 10% 8%,   rgba(120,58,14,0.50) 0%, transparent 36%),
+    radial-gradient(ellipse at 90% 88%,  rgba(55,20,4,0.60)   0%, transparent 44%),
+    radial-gradient(ellipse at 74% 16%,  rgba(85,38,8,0.32)   0%, transparent 28%),
+    radial-gradient(ellipse at 22% 80%,  rgba(48,18,4,0.38)   0%, transparent 32%),
+    radial-gradient(ellipse at 50% 50%,  rgba(65,28,6,0.18)   0%, transparent 55%),
+    linear-gradient(150deg, #321808 0%, #180c03 40%, #281506 70%, #140a02 100%);
+}
+
+/* Spine strip on left */
+.cover-spine {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 38px;
+  background: linear-gradient(90deg, #0e0602, #200f04, #160a02);
+  box-shadow: inset -5px 0 10px rgba(0,0,0,0.6), 2px 0 4px rgba(0,0,0,0.4);
+  display: flex; align-items: center; justify-content: center;
+}
+.cover-spine-text {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 9px;
+  color: rgba(180,140,50,0.55);
+  letter-spacing: 0.35em;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+/* Decorative frame */
+.cover-frame {
+  position: relative;
+  text-align: center;
+  padding: 52px 72px;
+  border: 1px solid rgba(180,140,50,0.35);
+  box-shadow:
+    inset 0 0 0 4px rgba(0,0,0,0.3),
+    inset 0 0 0 5px rgba(160,120,40,0.12),
+    0 0 40px rgba(0,0,0,0.5);
+}
+/* Corner ornaments */
+.cover-corner {
+  position: absolute;
+  width: 18px; height: 18px;
+  border-color: rgba(180,140,50,0.5);
+  border-style: solid;
+}
+.cover-corner.tl { top: -1px; left: -1px;  border-width: 2px 0 0 2px; }
+.cover-corner.tr { top: -1px; right: -1px; border-width: 2px 2px 0 0; }
+.cover-corner.bl { bottom: -1px; left: -1px;  border-width: 0 0 2px 2px; }
+.cover-corner.br { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+/* Cover ornament line above/below title */
+.cover-rule {
+  width: 60px; height: 1px;
+  background: rgba(180,140,50,0.4);
+  margin: 16px auto;
+}
+.cover-ornament {
+  font-size: 11px;
+  color: rgba(180,140,50,0.45);
+  letter-spacing: 0.2em;
+  margin-bottom: 4px;
+}
+
+/* Title */
+.cover-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(52px, 7vw, 96px);
+  color: #c8a040;
+  letter-spacing: 0.1em;
+  line-height: 1;
+  text-shadow:
+    0 1px 3px rgba(0,0,0,0.9),
+    0 -1px 1px rgba(255,220,100,0.15),
+    0 0 16px rgba(180,140,50,0.1);
+  margin-bottom: 4px;
+}
+.cover-subtitle {
+  font-family: 'Space Mono', monospace;
+  font-size: clamp(9px, 1vw, 12px);
+  color: rgba(180,140,50,0.65);
+  letter-spacing: 0.28em;
+  text-transform: lowercase;
+}
+
+/* Year stamp bottom of frame */
+.cover-year {
+  position: absolute;
+  bottom: 16px;
+  right: 24px;
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  color: rgba(180,140,50,0.35);
+  letter-spacing: 0.2em;
+}
+
+/* "Open" cue at bottom of page */
+.cover-open {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  color: rgba(180,140,50,0.45);
+  letter-spacing: 0.22em;
+  text-transform: lowercase;
+  cursor: none;
+  transition: color 0.2s;
+  animation: pulse 2.5s ease-in-out infinite;
+}
+.cover-open:hover { color: rgba(180,140,50,0.8); }
+@keyframes pulse {
+  0%,100% { opacity: 0.5; }
+  50%      { opacity: 1; }
+}
+
+/* Page number bottom-left on cover */
+.cover-pg {
+  position: absolute;
+  bottom: 32px;
+  left: 58px;
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  color: rgba(180,140,50,0.3);
+  letter-spacing: 0.15em;
+}
+
+/* Shared interior page wrapper */
+.page-interior {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #080808;
+}
+
+/* Interior nav (top bar on interior pages only) */
+.int-nav {
+  height: 44px;
+  background: #080808;
+  border-bottom: 1px solid #181818;
+  display: flex;
+  align-items: center;
+  padding: 0 28px;
+  flex-shrink: 0;
+}
+.int-nav-logo {
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  font-size: 12px;
+  color: #e01a00;
+  text-decoration: none;
+  cursor: none;
+  letter-spacing: 0.05em;
+}
+.int-nav-links { display: flex; margin-left: auto; }
+.int-nav-link {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: #444;
+  text-decoration: none;
+  padding: 6px 12px;
+  text-transform: lowercase;
+  cursor: none;
+  background: none; border: none;
+  letter-spacing: 0.06em;
+  transition: color 0.2s;
+}
+.int-nav-link:hover  { color: #f0ece4; }
+.int-nav-link.active { color: #e01a00; }
+
+/* Neocities 3-col layout */
+.neo-layout {
+  display: grid;
+  grid-template-columns: 176px 1fr 196px;
+  flex: 1;
+}
+
+/* Left sidebar */
+.neo-sidebar {
+  border-right: 1px solid #141414;
+  padding: 28px 16px;
+  background: #050505;
+}
+.sidebar-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 32px; color: #f0ece4;
+  line-height: 1; margin-bottom: 2px;
+}
+.sidebar-role {
+  font-size: 8px; color: #e01a00;
+  letter-spacing: 0.18em; text-transform: lowercase;
+  margin-bottom: 28px;
+}
+.sidebar-nav { display: flex; flex-direction: column; gap: 1px; margin-bottom: 20px; }
+.sidebar-link {
+  font-size: 10px; color: #3a3a3a;
+  text-decoration: none; padding: 7px 10px;
+  cursor: none; letter-spacing: 0.06em; text-transform: lowercase;
+  border-left: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+.sidebar-link:hover, .sidebar-link.active {
+  color: #f0ece4; border-left-color: #e01a00; background: #0f0f0f;
+}
+.sidebar-link.active { color: #e01a00; }
+.sidebar-divider { height: 1px; background: #141414; margin: 16px 0; }
+.sidebar-widget { font-size: 9px; color: #383838; letter-spacing: 0.08em; line-height: 2.1; }
+.sidebar-widget strong {
+  display: block; font-size: 8px; color: #555;
+  letter-spacing: 0.2em; margin-bottom: 3px; text-transform: lowercase;
+}
+.sidebar-img { width: 100%; margin-top: 20px; opacity: 0.45; }
+
+/* Main content */
+.neo-main { padding: 36px 44px; min-width: 0; overflow-y: auto; }
+
+.page-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(52px, 7vw, 88px);
+  color: #f0ece4; line-height: 1; margin-bottom: 6px;
+}
+.page-subtitle {
+  font-size: 9px; color: #e01a00;
+  letter-spacing: 0.2em; text-transform: lowercase;
+  margin-bottom: 40px; padding-bottom: 14px;
+  border-bottom: 1px solid #141414;
+}
+
+/* Right panel */
+.neo-right {
+  border-left: 1px solid #141414;
+  padding: 28px 16px; background: #050505;
+}
+.widget-label {
+  font-size: 8px; letter-spacing: 0.22em; color: #e01a00;
+  text-transform: lowercase; margin-bottom: 10px;
+  padding-bottom: 6px; border-bottom: 1px solid #141414;
+}
+.widget-content {
+  font-size: 9px; color: #3a3a3a;
+  line-height: 2.1; letter-spacing: 0.05em; margin-bottom: 24px;
+}
+.right-img { width: 100%; margin-bottom: 16px; opacity: 0.5; border: 1px solid #141414; }
+
+/* Bottom page-turn nav */
+.page-nav {
+  height: 44px;
+  border-top: 1px solid #141414;
+  display: flex; align-items: center;
+  padding: 0 28px;
+  flex-shrink: 0;
+  background: #080808;
+  grid-column: 1 / -1;
+}
+.page-nav-btn {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; color: #333;
+  background: none; border: none;
+  cursor: none; letter-spacing: 0.1em;
+  text-transform: lowercase;
+  transition: color 0.2s; padding: 0;
+}
+.page-nav-btn:hover { color: #f0ece4; }
+.page-nav-btn.next { margin-left: auto; }
+.page-nav-center {
+  flex: 1; text-align: center;
+  font-size: 8px; color: #2a2a2a;
+  letter-spacing: 0.15em; text-transform: lowercase;
+}
+
+/* STAGGER */
+.will-animate { opacity: 0; transform: translateY(12px); }
+.will-animate.animated {
+  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.33,1,0.68,1);
+  opacity: 1; transform: translateY(0);
+}
+
+/* WRITING */
+.w-section-label {
+  font-size: 8px; letter-spacing: 0.2em; color: #3a3a3a;
+  text-transform: lowercase; margin-bottom: 12px;
+  padding-bottom: 8px; border-bottom: 1px solid #141414;
+}
+.filter-bar { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+button.ftag {
+  background: transparent; border: 1px solid #1e1e1e;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: 0.08em; color: #3a3a3a;
+  padding: 4px 12px; text-transform: lowercase;
+  cursor: none; transition: all 0.18s;
+}
+button.ftag:hover, button.ftag.on {
+  background: #e01a00; color: #f0ece4; border-color: #e01a00;
+}
+.w-table { width: 100%; border-collapse: collapse; margin-bottom: 48px; }
+.w-table tr { border-bottom: 1px solid #111; cursor: none; position: relative; }
+.w-table tr:last-child { border-bottom: none; }
+.w-table tr::before {
+  content: ''; position: absolute; inset: 0;
+  background: #e01a00; transform: scaleX(0); transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.33,1,0.68,1); z-index: 0;
+}
+.w-table tr:hover::before { transform: scaleX(1); }
+.w-table tr:hover td { color: #f0ece4; position: relative; z-index: 1; }
+.w-table td { padding: 13px 8px; position: relative; z-index: 1; }
+td.wnum { font-size: 10px; color: #2a2a2a; width: 38px; font-style: italic; }
+td.wtitle { font-size: 12px; color: #666; letter-spacing: 0.02em; }
+td.wtag { text-align: right; white-space: nowrap; }
+.pill {
+  font-size: 8px; letter-spacing: 0.12em;
+  border: 1px solid #222; padding: 2px 8px; color: #333; text-transform: lowercase;
+}
+.pill.essay { border-color: #e01a00; color: #e01a00; }
+
+/* PROJECTS */
+.proj-card {
+  border: 1px solid #141414; margin-bottom: 16px;
+  cursor: none; transition: border-color 0.2s;
+  display: grid; grid-template-columns: 280px 1fr;
+}
+.proj-card:hover { border-color: #e01a00; }
+.proj-thumb { position: relative; overflow: hidden; background: #0d0d0d; min-height: 180px; }
+.proj-thumb iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+.proj-body { padding: 24px 28px; }
+.proj-cat { font-size: 8px; letter-spacing: 0.18em; color: #e01a00; margin-bottom: 8px; text-transform: lowercase; }
+.proj-title { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: #f0ece4; line-height: 1; margin-bottom: 12px; }
+.proj-desc { font-size: 10px; color: #444; line-height: 2; }
+.proj-meta { font-size: 9px; color: #2a2a2a; margin-top: 12px; letter-spacing: 0.05em; }
+
+/* CONTACT */
+.contact-huge {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(64px, 11vw, 150px);
+  line-height: 0.9; color: transparent;
+  -webkit-text-stroke: 1px #222;
+  margin-bottom: 52px; letter-spacing: 0.01em;
+}
+.contact-huge span { color: #f0ece4; -webkit-text-stroke: 0; }
+.c-list { display: flex; flex-direction: column; max-width: 440px; }
+.c-item {
+  display: flex; align-items: center; gap: 18px;
+  padding: 15px 0; border-bottom: 1px solid #111;
+  font-size: 11px; color: #444; text-decoration: none;
+  cursor: none; letter-spacing: 0.04em; transition: color 0.15s;
+}
+.c-item:hover { color: #f0ece4; }
+.c-item:hover .c-arrow { color: #e01a00; }
+.c-arrow { color: #222; font-size: 12px; transition: color 0.15s; }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: #080808; }
+::-webkit-scrollbar-thumb { background: #1e1e1e; }
+
+/* RESPONSIVE */
+@media (max-width: 960px) {
+  .neo-layout { grid-template-columns: 160px 1fr; }
+  .neo-right { display: none; }
+}
+@media (max-width: 680px) {
+  .neo-layout { grid-template-columns: 1fr; }
+  .neo-sidebar { display: none; }
+  .neo-main { padding: 24px 20px; }
+  .proj-card { grid-template-columns: 1fr; }
+  .cover-frame { padding: 36px 40px; }
+  .cover-title { font-size: 48px; }
+}
+</style>
+</head>
+<body>
+
+<div id="cursor-dot"></div>
+
+<!-- ═══ COVER ═══ -->
+<div class="page active" id="page-cover">
+  <div class="cover-spine">
+    <span class="cover-spine-text">morgan hirosky</span>
+  </div>
+
+  <div class="cover-frame">
+    <div class="cover-corner tl"></div>
+    <div class="cover-corner tr"></div>
+    <div class="cover-corner bl"></div>
+    <div class="cover-corner br"></div>
+    <div class="cover-ornament">✦ &nbsp; &nbsp; ✦ &nbsp; &nbsp; ✦</div>
+    <div class="cover-rule"></div>
+    <h1 class="cover-title">morgan<br>hirosky</h1>
+    <div class="cover-rule"></div>
+    <p class="cover-subtitle">writer &nbsp;·&nbsp; editor &nbsp;·&nbsp; creator</p>
+  </div>
+
+  <span class="cover-year">mmxxvi</span>
+  <span class="cover-pg">i</span>
+
+  <div class="cover-open" onclick="flipTo(1)" style="cursor:none;">
+    open &nbsp;→
+  </div>
+</div>
+
+<!-- ═══ WRITING ═══ -->
+<div class="page" id="page-writing">
+  <div class="page-interior">
+    <nav class="int-nav">
+      <a class="int-nav-logo" href="#" onclick="flipTo(0); return false;">mh.</a>
+      <div class="int-nav-links">
+        <button class="int-nav-link active" onclick="flipTo(1)">writing</button>
+        <button class="int-nav-link" onclick="flipTo(2)">projects</button>
+        <button class="int-nav-link" onclick="flipTo(3)">contact</button>
+      </div>
+    </nav>
+
+    <div class="neo-layout">
+      <aside class="neo-sidebar">
+        <div class="sidebar-name">MH.</div>
+        <div class="sidebar-role">morgan hirosky</div>
+        <nav class="sidebar-nav">
+          <a href="#" class="sidebar-link" onclick="flipTo(0); return false;">← cover</a>
+          <a href="#" class="sidebar-link active">writing</a>
+          <a href="#" class="sidebar-link" onclick="flipTo(2); return false;">projects</a>
+          <a href="#" class="sidebar-link" onclick="flipTo(3); return false;">contact</a>
+        </nav>
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-widget">
+          <strong>currently</strong>
+          lead writer<br>texas senate
+        </div>
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-widget">
+          <strong>prev.</strong>
+          editor, ktsw 89.9<br>
+          game rant<br>
+          boerne lifestyle
+        </div>
+        <div class="sidebar-divider"></div>
+        <img class="sidebar-img" src="holding hands.jpg.JPG" alt="" style="filter:invert(1);mix-blend-mode:screen;opacity:0.35;">
+      </aside>
+
+      <main class="neo-main">
+        <h1 class="page-title will-animate">Writing</h1>
+        <p class="page-subtitle will-animate">archive — articles, essays, journalism</p>
+
+        <p class="w-section-label will-animate">articles & essays</p>
+        <div class="filter-bar will-animate" id="fb1">
+          <button class="ftag on" onclick="fw('all',this,'wt1')">all</button>
+          <button class="ftag" onclick="fw('essay',this,'wt1')">essay</button>
+          <button class="ftag" onclick="fw('review',this,'wt1')">review</button>
+          <button class="ftag" onclick="fw('fiction',this,'wt1')">fiction</button>
+          <button class="ftag" onclick="fw('journal',this,'wt1')">journal</button>
+        </div>
+        <table class="w-table will-animate" id="wt1">
+          <tr data-tag="essay"><td class="wnum">01</td><td class="wtitle">Rabbits of the 90s: A Niche's Core</td><td class="wtag"><span class="pill essay">feature</span></td></tr>
+          <tr data-tag="essay"><td class="wnum">02</td><td class="wtitle">Oliver Tree: The King of Trial Error</td><td class="wtag"><span class="pill essay">feature</span></td></tr>
+          <tr data-tag="essay"><td class="wnum">03</td><td class="wtitle">Seven Anime Characters Struggling with the 'Father Wound'</td><td class="wtag"><span class="pill essay">feature</span></td></tr>
+          <tr data-tag="essay"><td class="wnum">04</td><td class="wtitle">Masaaki Yuasa Wrote an Adventure Time Episode</td><td class="wtag"><span class="pill essay">feature</span></td></tr>
+          <tr data-tag="fiction"><td class="wnum">05</td><td class="wtitle">Billy's Western Wear</td><td class="wtag"><span class="pill essay">article</span></td></tr>
+          <tr data-tag="fiction"><td class="wnum">06</td><td class="wtitle">Loneliness Loves You</td><td class="wtag"><span class="pill essay">article</span></td></tr>
+          <tr data-tag="essay"><td class="wnum">07</td><td class="wtitle">15 Most Disturbing Victorious Outros</td><td class="wtag"><span class="pill essay">article</span></td></tr>
+          <tr data-tag="journal"><td class="wnum">08</td><td class="wtitle">Music Diary: Broken Teeth</td><td class="wtag"><span class="pill">journal</span></td></tr>
+          <tr data-tag="essay"><td class="wnum">09</td><td class="wtitle">The World's Most Dubious Van: Identity &amp; Cyberspace</td><td class="wtag"><span class="pill essay">essay</span></td></tr>
+          <tr data-tag="review"><td class="wnum">10</td><td class="wtitle">Barbie: Movie Review</td><td class="wtag"><span class="pill">review</span></td></tr>
+          <tr data-tag="review"><td class="wnum">11</td><td class="wtitle">500 Days of Bummers: Movie Review</td><td class="wtag"><span class="pill">review</span></td></tr>
+        </table>
+
+        <p class="w-section-label will-animate">legislative writing</p>
+        <div class="filter-bar will-animate" id="fb2">
+          <button class="ftag on" onclick="fw('all',this,'wt2')">all</button>
+          <button class="ftag" onclick="fw('proclamation',this,'wt2')">proclamation</button>
+          <button class="ftag" onclick="fw('resolution',this,'wt2')">resolution</button>
+          <button class="ftag" onclick="fw('tribute',this,'wt2')">tribute</button>
+        </div>
+        <table class="w-table will-animate" id="wt2">
+          <tr data-tag="proclamation"><td class="wnum">01</td><td class="wtitle">Proclaiming October 15th as Texas Rural Communities Day</td><td class="wtag"><span class="pill">proclamation</span></td></tr>
+          <tr data-tag="tribute"><td class="wnum">02</td><td class="wtitle">Honoring the Life and Legacy of [Name], Servant of the People</td><td class="wtag"><span class="pill">tribute</span></td></tr>
+          <tr data-tag="resolution"><td class="wnum">03</td><td class="wtitle">Recognizing the Achievements of Texas State University Graduates</td><td class="wtag"><span class="pill">resolution</span></td></tr>
+          <tr data-tag="proclamation"><td class="wnum">04</td><td class="wtitle">Proclaiming a Week of Awareness for Mental Health Advocacy in Texas</td><td class="wtag"><span class="pill">proclamation</span></td></tr>
+          <tr data-tag="tribute"><td class="wnum">05</td><td class="wtitle">Commending Outstanding Texas Veterans for Dedicated Service</td><td class="wtag"><span class="pill">tribute</span></td></tr>
+          <tr data-tag="resolution"><td class="wnum">06</td><td class="wtitle">Welcoming Distinguished International Delegates to the Texas Senate</td><td class="wtag"><span class="pill">resolution</span></td></tr>
+        </table>
+      </main>
+
+      <aside class="neo-right">
+        <div class="widget-label">awards</div>
+        <div class="widget-content">★ article of the year<br>ktsw 89.9 fm</div>
+        <div class="widget-label">education</div>
+        <div class="widget-content">b.a. journalism<br>texas state univ.<br>cum laude · 2023</div>
+        <div class="widget-label">stats</div>
+        <div class="widget-content">500+ senate docs<br>5+ yrs experience<br>1,956% social growth</div>
+        <img class="right-img" src="flower gif.gif" alt="">
+      </aside>
+    </div>
+
+    <div class="page-nav" style="display:flex;">
+      <button class="page-nav-btn prev" onclick="flipTo(0)">← cover</button>
+      <span class="page-nav-center">ii · writing</span>
+      <button class="page-nav-btn next" onclick="flipTo(2)">projects →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PROJECTS ═══ -->
+<div class="page" id="page-projects">
+  <div class="page-interior">
+    <nav class="int-nav">
+      <a class="int-nav-logo" href="#" onclick="flipTo(0); return false;">mh.</a>
+      <div class="int-nav-links">
+        <button class="int-nav-link" onclick="flipTo(1)">writing</button>
+        <button class="int-nav-link active" onclick="flipTo(2)">projects</button>
+        <button class="int-nav-link" onclick="flipTo(3)">contact</button>
+      </div>
+    </nav>
+
+    <div class="neo-layout">
+      <aside class="neo-sidebar">
+        <div class="sidebar-name">MH.</div>
+        <div class="sidebar-role">morgan hirosky</div>
+        <nav class="sidebar-nav">
+          <a href="#" class="sidebar-link" onclick="flipTo(0); return false;">← cover</a>
+          <a href="#" class="sidebar-link" onclick="flipTo(1); return false;">writing</a>
+          <a href="#" class="sidebar-link active">projects</a>
+          <a href="#" class="sidebar-link" onclick="flipTo(3); return false;">contact</a>
+        </nav>
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-widget"><strong>shot on</strong>canon xf300<br>canon eos rebel sl1</div>
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-widget"><strong>edited in</strong>adobe premiere<br>adobe photoshop</div>
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-widget"><strong>themes</strong>identity · mortality<br>memory · the self</div>
+      </aside>
+
+      <main class="neo-main">
+        <h1 class="page-title will-animate">Projects</h1>
+        <p class="page-subtitle will-animate">independent film & journalism</p>
+
+        <div class="will-animate">
+          <div class="proj-card">
+            <div class="proj-thumb">
+              <iframe src="https://www.youtube.com/embed/6BiXCjKb1Cc" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="proj-body">
+              <p class="proj-cat">documentary film · trailer · 2022</p>
+              <h3 class="proj-title">Dead Bugs</h3>
+              <p class="proj-desc">Three anonymous individuals share intimate reflections of their self-concepts, memories, and defining relationships. Faceless interviews and sentimentally charged locations suggest that identity emanates beyond the individual.</p>
+              <p class="proj-meta">Canon XF300 · Adobe Premiere Pro</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="will-animate">
+          <div class="proj-card">
+            <div class="proj-thumb">
+              <iframe src="https://www.youtube.com/embed/orgpva2COfY" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="proj-body">
+              <p class="proj-cat">short documentary · 2022</p>
+              <h3 class="proj-title">Dead Bugs (full)</h3>
+              <p class="proj-desc">Self-understanding is born through witnessing another. Shot across intimate locations, this film asks what it means to know yourself through someone else's eyes.</p>
+              <p class="proj-meta">Canon XF300 · Adobe Premiere Pro</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="will-animate">
+          <div class="proj-card" style="grid-template-columns:1fr; display:block;">
+            <div class="proj-body" style="border-top:1px solid #141414;">
+              <p class="proj-cat">independent journalism · 2023</p>
+              <h3 class="proj-title">Life as Death's Keeper</h3>
+              <p class="proj-desc">An examination of morticians' perspectives on mortality, faith, family, and the pursuit of happiness. Long-form interviews and firsthand observation of mortuary practice.</p>
+              <p class="proj-meta">Canon EOS Rebel SL1 &amp; Digital Rebel XT · Adobe Photoshop</p>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <aside class="neo-right">
+        <div class="widget-label">solo projects</div>
+        <div class="widget-content">2 completed<br>film + journalism</div>
+        <div class="widget-label">recognition</div>
+        <div class="widget-content">★ article of the year<br>ktsw 89.9 · 2022</div>
+        <img class="right-img" src="winter.gif.gif" alt="">
+        <img class="right-img" src="red tree.gif.gif" alt="">
+      </aside>
+    </div>
+
+    <div class="page-nav" style="display:flex;">
+      <button class="page-nav-btn prev" onclick="flipTo(1)">← writing</button>
+      <span class="page-nav-center">iii · projects</span>
+      <button class="page-nav-btn next" onclick="flipTo(3)">contact →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CONTACT ═══ -->
+<div class="page" id="page-contact">
+  <div class="page-interior">
+    <nav class="int-nav">
+      <a class="int-nav-logo" href="#" onclick="flipTo(0); return false;">mh.</a>
+      <div class="int-nav-links">
+        <button class="int-nav-link" onclick="flipTo(1)">writing</button>
+        <button class="int-nav-link" onclick="flipTo(2)">projects</button>
+        <button class="int-nav-link active" onclick="flipTo(3)">contact</button>
+      </div>
+    </nav>
+
+    <div class="neo-layout">
+      <aside class="neo-sidebar">
+        <div class="sidebar-name">MH.</div>
+        <div class="sidebar-role">morgan hirosky</div>
+        <nav class="sidebar-nav">
+          <a href="#" class="sidebar-link" onclick="flipTo(0); return false;">← cover</a>
+          <a href="#" class="sidebar-link" onclick="flipTo(1); return false;">writing</a>
+          <a href="#" class="sidebar-link" onclick="flipTo(2); return false;">projects</a>
+          <a href="#" class="sidebar-link active">contact</a>
+        </nav>
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-widget"><strong>available for</strong>freelance<br>collaboration<br>full-time roles</div>
+        <div class="sidebar-divider"></div>
+        <img class="sidebar-img" src="waves gif.gif" alt="" style="opacity:0.3;">
+      </aside>
+
+      <main class="neo-main">
+        <h1 class="page-title will-animate">Contact</h1>
+        <p class="page-subtitle will-animate">open to freelance, collaboration & full-time</p>
+        <div class="contact-huge will-animate">get<br><span>in</span><br>touch</div>
+        <div class="c-list will-animate">
+          <a class="c-item" href="mailto:morghirosky@gmail.com"><span class="c-arrow">→</span> morghirosky@gmail.com</a>
+          <a class="c-item" href="tel:2147625883"><span class="c-arrow">→</span> (214) 762-5883</a>
+          <a class="c-item" href="#"><span class="c-arrow">→</span> linkedin</a>
+          <a class="c-item" href="#"><span class="c-arrow">→</span> download cv</a>
+        </div>
+      </main>
+
+      <aside class="neo-right">
+        <div class="widget-label">based in</div>
+        <div class="widget-content">texas, usa</div>
+        <div class="widget-label">response</div>
+        <div class="widget-content">usually within<br>24–48 hours</div>
+        <div class="widget-label">year</div>
+        <div class="widget-content">mmxxvi</div>
+      </aside>
+    </div>
+
+    <div class="page-nav" style="display:flex;">
+      <button class="page-nav-btn prev" onclick="flipTo(2)">← projects</button>
+      <span class="page-nav-center">iv · contact</span>
+      <button class="page-nav-btn next" onclick="flipTo(0)" style="color:#333;">back to cover →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const PAGES = ['cover','writing','projects','contact'];
+let currentIndex = 0;
+let isFlipping = false;
+
+function flipTo(targetIndex) {
+  if (targetIndex === currentIndex || isFlipping) return;
+  isFlipping = true;
+
+  const direction = targetIndex > currentIndex ? 1 : -1;
+  const currentEl = document.getElementById('page-' + PAGES[currentIndex]);
+  const targetEl  = document.getElementById('page-' + PAGES[targetIndex]);
+
+  // Prepare target off-screen
+  targetEl.style.transition = 'none';
+  targetEl.style.transform  = `rotateY(${direction * 90}deg)`;
+  targetEl.classList.add('flipping');
+  void targetEl.offsetWidth;
+
+  // Flip current out
+  currentEl.style.transition = 'transform 0.38s cubic-bezier(0.55,0,1,0.45)';
+  currentEl.style.transform  = `rotateY(${-direction * 90}deg)`;
+
+  setTimeout(() => {
+    currentEl.classList.remove('active');
+    currentEl.style.transform  = '';
+    currentEl.style.transition = '';
+
+    targetEl.classList.add('active');
+    void targetEl.offsetWidth;
+
+    targetEl.style.transition = 'transform 0.38s cubic-bezier(0,0.55,0.45,1)';
+    targetEl.style.transform  = 'rotateY(0deg)';
+
+    if (targetIndex !== 0) staggerPage(targetEl);
+
+    setTimeout(() => {
+      targetEl.classList.remove('flipping');
+      targetEl.style.transform  = '';
+      targetEl.style.transition = '';
+      currentIndex = targetIndex;
+      isFlipping   = false;
+    }, 380);
+  }, 380);
+}
+
+function navigateTo(pageId) {
+  flipTo(PAGES.indexOf(pageId));
+}
+
+function staggerPage(page) {
+  page.querySelectorAll('.will-animate').forEach((el, i) => {
+    el.classList.remove('animated');
+    el.style.transitionDelay = '';
+    void el.offsetWidth;
+    setTimeout(() => {
+      el.style.transitionDelay = (i * 0.08) + 's';
+      el.classList.add('animated');
+    }, 50);
+  });
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+    if (currentIndex < PAGES.length - 1) flipTo(currentIndex + 1);
+  }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+    if (currentIndex > 0) flipTo(currentIndex - 1);
+  }
+});
+
+// Cursor
+const dot = document.getElementById('cursor-dot');
+let lastDrop = 0;
+document.addEventListener('mousemove', e => {
+  dot.style.left = e.clientX + 'px';
+  dot.style.top  = e.clientY + 'px';
+  const now = Date.now();
+  if (now - lastDrop > 40) {
+    lastDrop = now;
+    const size = 4 + Math.random() * 4;
+    const d = document.createElement('div');
+    d.className = 'ink-drop';
+    d.style.left    = e.clientX + 'px';
+    d.style.top     = e.clientY + 'px';
+    d.style.width   = size + 'px';
+    d.style.height  = size + 'px';
+    d.style.opacity = (0.2 + Math.random() * 0.2).toFixed(2);
+    document.body.appendChild(d);
+    requestAnimationFrame(() => {
+      d.style.transform = `translate(-50%,-50%) scale(${2.5 + Math.random()})`;
+      d.style.opacity   = '0';
+    });
+    setTimeout(() => d.remove(), 700);
+  }
+});
+document.addEventListener('mouseleave', () => dot.style.opacity = '0');
+document.addEventListener('mouseenter', () => dot.style.opacity = '');
+document.addEventListener('mousedown',  () => document.body.classList.add('clicking'));
+document.addEventListener('mouseup',    () => document.body.classList.remove('clicking'));
+document.querySelectorAll('a, button, .proj-card, .w-table tr, .cover-open').forEach(el => {
+  el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+  el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+});
+
+// Writing filter
+function fw(tag, btn, tableId) {
+  btn.closest('.filter-bar').querySelectorAll('.ftag').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('#' + tableId + ' tr').forEach(r => {
+    r.style.display = (tag === 'all' || r.dataset.tag === tag) ? '' : 'none';
+  });
+}
+</script>
+</body>
+</html>
