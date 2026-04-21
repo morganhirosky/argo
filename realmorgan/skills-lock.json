@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "skills": {
+    "ascii-art": {
+      "source": "neethanwu/ascii-art",
+      "sourceType": "github",
+      "computedHash": "3218bb5d43c6504310a3eaf84b594bf1f64d3358b78af63efec093b378d21297"
+    }
+  }
+}

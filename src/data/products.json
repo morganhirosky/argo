@@ -1,0 +1,508 @@
+{
+  "products": [
+    {
+      "id": "w001",
+      "name": "MISFORTUNE.tee",
+      "category": "women",
+      "price": 34,
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "description": "100% cotton. glitch print. runs true to size.",
+      "image": "/products/w001.png",
+      "tags": [
+        "graphic",
+        "black"
+      ]
+    },
+    {
+      "id": "w003",
+      "name": "AMNESIA.tee",
+      "category": "women",
+      "price": 34,
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "description": "long sleeve. corrupted signal print. relaxed fit.",
+      "image": "/products/w003.png",
+      "tags": [
+        "longsleeve",
+        "graphic"
+      ]
+    },
+    {
+      "id": "w004",
+      "name": "AFFLICTION.tee",
+      "category": "women",
+      "price": 34,
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ],
+      "description": "oversized fit. null pointer reference. heavy cotton.",
+      "image": "/products/w004.png",
+      "tags": [
+        "oversized",
+        "text"
+      ]
+    },
+    {
+      "id": "w005",
+      "name": "MEMORY.tee",
+      "category": "women",
+      "price": 34,
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L"
+      ],
+      "description": "fitted crop. memory leak graphic. 100% cotton.",
+      "image": "/products/w005.png",
+      "tags": [
+        "crop",
+        "graphic"
+      ]
+    },
+    {
+      "id": "w006",
+      "name": "NAIVETY.tee",
+      "category": "women",
+      "price": 34,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "description": "standard fit. kernel panic screen print. washed.",
+      "image": "/products/w006.png",
+      "tags": [
+        "graphic",
+        "washed"
+      ]
+    },
+    {
+      "id": "w007",
+      "name": "RED_ENVY.tee",
+      "category": "women",
+      "price": 34,
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ],
+      "description": "true black. minimal text. all day fit.",
+      "image": "/products/w007.png",
+      "tags": [
+        "minimal",
+        "text"
+      ]
+    },
+    {
+      "id": "w008",
+      "name": "BLUE_ENVY.longsleeve",
+      "category": "women",
+      "price": 34,
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L"
+      ],
+      "description": "long sleeve. runtime error on back. relaxed.",
+      "image": "/products/w008.png",
+      "tags": [
+        "longsleeve",
+        "back print"
+      ]
+    },
+    {
+      "id": "w009",
+      "name": "MORTALITY.tee",
+      "category": "women",
+      "price": 34,
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "description": "distressed print. corrupted data motif. slim fit.",
+      "image": "/products/w009.png",
+      "tags": [
+        "distressed",
+        "graphic"
+      ]
+    },
+    {
+      "id": "w010",
+      "name": "REYNARD.tee",
+      "category": "women",
+      "price": 34,
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L"
+      ],
+      "description": "cropped. 404 error screen. soft cotton.",
+      "image": "/products/w010.png",
+      "tags": [
+        "crop",
+        "text"
+      ]
+    },
+    {
+      "id": "w011",
+      "name": "CREATOR.tee",
+      "category": "women",
+      "price": 34,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "description": "dead pixel cluster print. oversized.",
+      "image": "/products/w011.png",
+      "tags": [
+        "oversized",
+        "graphic"
+      ]
+    },
+    {
+      "id": "w012",
+      "name": "HOSTAGE.tee",
+      "category": "women",
+      "price": 34,
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "description": "stack overflow. long sleeve. heavyweight.",
+      "image": "/products/w012.png",
+      "tags": [
+        "longsleeve",
+        "heavy"
+      ]
+    },
+    {
+      "id": "w013",
+      "name": "SEVERANCE.tee",
+      "category": "women",
+      "price": 34,
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L"
+      ],
+      "description": "ghost process. barely-there print. sheer cotton.",
+      "image": "/products/w013.png",
+      "tags": [
+        "sheer",
+        "graphic"
+      ]
+    },
+    {
+      "id": "w014",
+      "name": "FATALITY.tee",
+      "category": "women",
+      "price": 34,
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "description": "cropped. system32 directory print. washed black.",
+      "image": "/products/w014.png",
+      "tags": [
+        "crop",
+        "text"
+      ]
+    },
+    {
+      "id": "w015",
+      "name": "CREATURE.tee",
+      "category": "women",
+      "price": 34,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ],
+      "description": "segmentation fault. oversized. washed finish.",
+      "image": "/products/w015.png",
+      "tags": [
+        "oversized",
+        "washed"
+      ]
+    },
+    {
+      "id": "m001",
+      "name": "MANNERS.tee",
+      "category": "men",
+      "price": 34,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ],
+      "description": "100% cotton. glitch print. standard fit.",
+      "image": "/products/m001.png",
+      "tags": [
+        "graphic",
+        "black"
+      ]
+    },
+    {
+      "id": "m002",
+      "name": "COLLATERAL.tee",
+      "category": "men",
+      "price": 34,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ],
+      "description": "null pointer reference. heavy cotton. boxy.",
+      "image": "/products/m002.png",
+      "tags": [
+        "boxy",
+        "text"
+      ]
+    },
+    {
+      "id": "m003",
+      "name": "CREATURE.tee",
+      "category": "men",
+      "price": 34,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "description": "kernel panic screen print. standard fit.",
+      "image": "/products/m003.png",
+      "tags": [
+        "graphic",
+        "washed"
+      ]
+    },
+    {
+      "id": "m004",
+      "name": "HUNGRY.longsleeve",
+      "category": "men",
+      "price": 34,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ],
+      "description": "void. long sleeve. heavyweight cotton.",
+      "image": "/products/m004.png",
+      "tags": [
+        "longsleeve",
+        "minimal"
+      ]
+    },
+    {
+      "id": "m005",
+      "name": "GUILTY.tee",
+      "category": "men",
+      "price": 34,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "description": "corrupted signal print. relaxed fit.",
+      "image": "/products/m005.png",
+      "tags": [
+        "graphic",
+        "relaxed"
+      ]
+    },
+    {
+      "id": "m006",
+      "name": "HONESTY.tee",
+      "category": "men",
+      "price": 34,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ],
+      "description": "true black. minimal text. heavyweight.",
+      "image": "/products/m006.png",
+      "tags": [
+        "minimal",
+        "heavy"
+      ]
+    },
+    {
+      "id": "m007",
+      "name": "CORRUPTED.tee",
+      "category": "men",
+      "price": 34,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "description": "corrupted data motif. distressed print. boxy.",
+      "image": "/products/m007.png",
+      "tags": [
+        "distressed",
+        "boxy"
+      ]
+    },
+    {
+      "id": "m008",
+      "name": "KING_KILLER.longsleeve",
+      "category": "men",
+      "price": 34,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ],
+      "description": "stack overflow. long sleeve. oversized fit.",
+      "image": "/products/m008.png",
+      "tags": [
+        "longsleeve",
+        "oversized"
+      ]
+    },
+    {
+      "id": "m009",
+      "name": "BLUE_HORSEMAN.tee",
+      "category": "men",
+      "price": 34,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "description": "404 error screen. standard fit. soft wash.",
+      "image": "/products/m009.png",
+      "tags": [
+        "text",
+        "washed"
+      ]
+    },
+    {
+      "id": "m010",
+      "name": "GOLD_HORSEMAN.tee",
+      "category": "men",
+      "price": 34,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ],
+      "description": "segmentation fault. boxy fit. heavy cotton.",
+      "image": "/products/m010.png",
+      "tags": [
+        "boxy",
+        "heavy"
+      ]
+    },
+    {
+      "id": "m011",
+      "name": "LAIN.tee",
+      "category": "men",
+      "price": 34,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ],
+      "description": "deadlock graphic. standard fit. heavy cotton.",
+      "image": "/products/m011.png",
+      "tags": [
+        "graphic",
+        "black"
+      ]
+    },
+    {
+      "id": "m012",
+      "name": "BAD_CHEMISTRY.tee",
+      "category": "men",
+      "price": 34,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "description": "buffer overflow. relaxed fit. washed finish.",
+      "image": "/products/m012.png",
+      "tags": [
+        "graphic",
+        "washed"
+      ]
+    },
+    {
+      "id": "m013",
+      "name": "GREED.tee",
+      "category": "men",
+      "price": 34,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ],
+      "description": "ghost process. minimal print. boxy.",
+      "image": "/products/m013.png",
+      "tags": [
+        "minimal",
+        "boxy"
+      ]
+    }
+  ]
+}
