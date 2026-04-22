@@ -69,7 +69,8 @@ export default function DesktopIcon({ id, label, icon, color, href, hideLabel, o
           justifyContent: 'center',
           fontSize: '36px',
           position: 'relative',
-          transition: 'opacity 0.15s',
+          transition: 'opacity 0.15s, filter 0.15s',
+          filter: color ? `drop-shadow(0 0 8px ${color})` : undefined,
         }}
       >
         {icon}
