@@ -1,6 +1,6 @@
 "use client"
 
-import { ReactNode, useState, useCallback, useRef } from 'react'
+import { ReactNode, useState, useCallback, useRef, useEffect } from 'react'
 import { WindowId } from '@/types/window'
 import { useWindows } from '@/context/WindowContext'
 import { useWindowDrag } from './useWindowDrag'
@@ -30,8 +30,16 @@ export default function Window({
   const { state, dispatch } = useWindows()
   const { position, onMouseDown } = useWindowDrag(initialPosition)
   const [size, setSize] = useState({ width: initialWidth, height: initialHeight })
+  const [isMobile, setIsMobile] = useState(false)
   const resizing = useRef(false)
   const resizeOrigin = useRef<{ mouseX: number; mouseY: number; w: number; h: number } | null>(null)
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
 
   const isActive = state.windows[id].zIndex === state.topZ
 
@@ -59,6 +67,29 @@ export default function Window({
     window.addEventListener('mousemove', onMouseMove)
     window.addEventListener('mouseup', onMouseUp)
   }, [size])
+
+  if (isMobile) {
+    return (
+      <div
+        style={{
+          position: 'fixed',
+          inset: 0,
+          bottom: '36px',
+          zIndex,
+          display: 'flex',
+          flexDirection: 'column',
+          background: 'var(--chrome)',
+          border: '1px solid var(--border)',
+        }}
+        onMouseDown={() => dispatch({ type: 'FOCUS_WINDOW', id })}
+      >
+        <WindowTitleBar id={id} title={title} isActive={true} onMouseDown={() => {}} />
+        <div style={{ display: isMinimized ? 'none' : 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
+          {children}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div
