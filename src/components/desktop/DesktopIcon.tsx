@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { WindowId } from '@/types/window'
 import { useWindows } from '@/context/WindowContext'
@@ -22,8 +22,20 @@ export default function DesktopIcon({ id, label, icon, color, href, hideLabel, o
   const router = useRouter()
   const clickTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
   const clickCount = useRef(0)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768)
+  }, [])
+
+  const open = () => {
+    if (onDoubleClick) onDoubleClick()
+    else if (href) router.push(href)
+    else if (id) dispatch({ type: 'OPEN_WINDOW', id })
+  }
 
   const handleClick = () => {
+    if (isMobile) { open(); return; }
     clickCount.current += 1
     if (clickCount.current === 1) {
       clickTimeout.current = setTimeout(() => {
@@ -32,13 +44,7 @@ export default function DesktopIcon({ id, label, icon, color, href, hideLabel, o
     } else if (clickCount.current >= 2) {
       if (clickTimeout.current) clearTimeout(clickTimeout.current)
       clickCount.current = 0
-      if (onDoubleClick) {
-        onDoubleClick()
-      } else if (href) {
-        router.push(href)
-      } else if (id) {
-        dispatch({ type: 'OPEN_WINDOW', id })
-      }
+      open()
     }
   }
 
