@@ -184,8 +184,11 @@ export default function EdaxPage() {
         fontFamily: 'Times New Roman, serif',
         background: '#ffffff',
         minHeight: 'calc(100vh - 52px)',
-        padding: '20px 32px 60px',
+        padding: 'clamp(12px, 4vw, 20px) clamp(14px, 5vw, 32px) 60px',
         maxWidth: '760px',
+        boxSizing: 'border-box',
+        width: '100%',
+        overflowX: 'hidden',
       }}>
 
         {/* Header row */}
@@ -259,8 +262,8 @@ export default function EdaxPage() {
           background: '#ffffff',
           padding: '12px 14px',
           marginBottom: '14px',
-          minHeight: '160px',
-          maxHeight: '320px',
+          minHeight: '120px',
+          maxHeight: 'clamp(180px, 35vh, 320px)',
           overflowY: 'auto',
           fontFamily: 'Courier New, monospace',
           fontSize: '13px',
