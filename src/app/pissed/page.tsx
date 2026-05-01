@@ -1,11 +1,13 @@
 "use client"
 
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 const SCROLL_TEXT = `A problem has been detected and ARGO has been shut down to prevent damage to your computer. PISSED.AVI caused an unexpected error. If this is the first time you've seen this stop error screen restart your computer. If this screen appears again follow these steps. Check to make sure any new hardware or software is properly installed. If this is a new installation ask your hardware or software manufacturer for any updates you might need. If problems continue disable or remove any newly installed hardware or software. Disable BIOS memory options such as caching or shadowing. If you need to use safe mode to remove or disable components restart your computer press F8 to select advanced startup options and then select safe mode. Technical information: STOP 0x0000007E (0xC0000005, 0xF86B5A89, 0xF9573B8C, 0xF9573888) Beginning dump of physical memory. Physical memory dump complete. Contact your system administrator or technical support group for further assistance. `
 
 export default function PissedPage() {
   const router = useRouter()
+  const [ready, setReady] = useState(false)
 
   return (
     <>
@@ -113,8 +115,10 @@ export default function PissedPage() {
           loop
           muted
           playsInline
-          onLoadedMetadata={e => { (e.currentTarget as HTMLVideoElement).currentTime = 0 }}
+          onLoadedMetadata={e => { e.currentTarget.currentTime = 0 }}
+          onSeeked={() => setReady(true)}
           style={{
+            opacity: ready ? 1 : 0,
             position: 'relative',
             zIndex: 2,
             display: 'block',
