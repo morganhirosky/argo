@@ -14,6 +14,12 @@ const sleep = (ms: number) => new Promise<void>(r => setTimeout(r, ms))
 
 export default function EdaxPage() {
   const router = useRouter()
+
+  useEffect(() => {
+    document.body.style.overflow = 'auto'
+    return () => { document.body.style.overflow = 'hidden' }
+  }, [])
+
   const [log, setLog]                     = useState<LogLine[]>([])
   const [currentTyping, setCurrentTyping] = useState('')
   const [showDots, setShowDots]           = useState(false)

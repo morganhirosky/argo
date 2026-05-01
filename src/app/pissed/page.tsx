@@ -111,7 +111,9 @@ export default function PissedPage() {
           src="/PISSED.mp4"
           autoPlay
           loop
+          muted
           playsInline
+          onLoadedMetadata={e => { (e.currentTarget as HTMLVideoElement).currentTime = 0 }}
           style={{
             position: 'relative',
             zIndex: 2,

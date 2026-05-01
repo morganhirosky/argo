@@ -618,23 +618,23 @@ export default function HeartGame() {
           {/* HUD */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginBottom: '6px', fontSize: '10px', letterSpacing: '0.1em' }}>
             <span>
-              <span style={{ color: '#441111' }}>HP </span>
+              <span style={{ color: '#aa5566' }}>HP </span>
               <span style={{ color: '#cc2233' }}>{hpBar(state.hp, state.maxHp, 10)}</span>
-              <span style={{ color: '#441111' }}> {state.hp}/{state.maxHp}</span>
+              <span style={{ color: '#aa5566' }}> {state.hp}/{state.maxHp}</span>
             </span>
             <span>
-              <span style={{ color: '#441111' }}>AMOR </span>
+              <span style={{ color: '#aa5566' }}>AMOR </span>
               <span style={{ color: '#4499ff' }}>{state.amor}</span>
             </span>
             {state.phase === 'combat' && state.enemy && (
               <span>
-                <span style={{ color: '#441111' }}>{state.enemy.name} </span>
+                <span style={{ color: '#aa5566' }}>{state.enemy.name} </span>
                 <span style={{ color: '#cc2233' }}>{hpBar(state.enemy.currentHp, state.enemy.maxHp, 8)}</span>
-                <span style={{ color: '#441111' }}> {state.enemy.currentHp}/{state.enemy.maxHp}</span>
+                <span style={{ color: '#aa5566' }}> {state.enemy.currentHp}/{state.enemy.maxHp}</span>
               </span>
             )}
             {state.inventory.length > 0 && (
-              <span style={{ color: '#551122' }}>INV: {state.inventory.map(i => ITEMS[i].name).join(' · ')}</span>
+              <span style={{ color: '#aa5566' }}>INV: {state.inventory.map(i => ITEMS[i].name).join(' · ')}</span>
             )}
           </div>
 
@@ -643,21 +643,21 @@ export default function HeartGame() {
             {recentLog.map((line, i) => (
               <div key={i} style={{
                 color: line.startsWith('—') ? '#cc2233'
-                  : line.startsWith('>') ? '#661122'
-                  : line.startsWith('  ⚔') || line.startsWith('⚔') ? '#ff4444'
-                  : '#3d0010',
+                  : line.startsWith('>') ? '#ff99aa'
+                  : line.startsWith('  ⚔') || line.startsWith('⚔') ? '#ff5555'
+                  : '#cc8899',
                 letterSpacing: line.startsWith('—') ? '0.08em' : '0.01em',
               }}>{line || '\u00A0'}</div>
             ))}
           </div>
 
           {/* Choices */}
-          <div style={{ borderTop: '1px solid #1a0006', paddingTop: '6px', display: 'flex', flexWrap: 'wrap', gap: '0 24px' }}>
+          <div style={{ borderTop: '1px solid #440011', paddingTop: '8px', display: 'flex', flexWrap: 'wrap', gap: '0 24px' }}>
             {state.phase === 'explore' && scene?.choices.map((c, i) => (
               <button key={i} onClick={() => dispatch({ type: 'CHOOSE', idx: i })}
-                style={{ background: 'transparent', border: 'none', color: '#3d0010', fontFamily: font, fontSize: '11px', letterSpacing: '0.06em', cursor: 'pointer', padding: '2px 0' }}
-                onMouseEnter={e => (e.currentTarget.style.color = '#cc2233')}
-                onMouseLeave={e => (e.currentTarget.style.color = '#3d0010')}>
+                style={{ background: 'transparent', border: 'none', color: '#ffccdd', fontFamily: font, fontSize: '11px', letterSpacing: '0.06em', cursor: 'pointer', padding: '2px 0' }}
+                onMouseEnter={e => (e.currentTarget.style.color = '#ffffff')}
+                onMouseLeave={e => (e.currentTarget.style.color = '#ffccdd')}>
                 [{i + 1}] {c.label}
               </button>
             ))}
@@ -668,10 +668,10 @@ export default function HeartGame() {
               { move: 'flee'    as const, label: 'FLEE (60%)' },
             ]).map(({ move, label }, i) => (
               <button key={move} onClick={() => dispatch({ type: 'COMBAT', move })}
-                style={{ background: 'transparent', border: 'none', color: '#3d0010', fontFamily: font, fontSize: '11px', letterSpacing: '0.06em', cursor: 'pointer', padding: '2px 0',
+                style={{ background: 'transparent', border: 'none', color: '#ffccdd', fontFamily: font, fontSize: '11px', letterSpacing: '0.06em', cursor: 'pointer', padding: '2px 0',
                   opacity: (move === 'special' && state.amor < 30) || (move === 'item' && state.inventory.length === 0) ? 0.3 : 1 }}
-                onMouseEnter={e => (e.currentTarget.style.color = '#cc2233')}
-                onMouseLeave={e => (e.currentTarget.style.color = '#3d0010')}>
+                onMouseEnter={e => (e.currentTarget.style.color = '#ffffff')}
+                onMouseLeave={e => (e.currentTarget.style.color = '#ffccdd')}>
                 [{i + 1}] {label}
               </button>
             ))}
