@@ -117,6 +117,7 @@ export default function PissedPage() {
           playsInline
           onLoadedMetadata={e => { e.currentTarget.currentTime = 0 }}
           onSeeked={() => setReady(true)}
+          onCanPlay={() => setReady(true)}
           style={{
             opacity: ready ? 1 : 0,
             position: 'relative',
