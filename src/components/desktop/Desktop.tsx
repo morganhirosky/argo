@@ -37,8 +37,8 @@ const ICON_POSITIONS = [
 ]
 
 const ICONS: { id?: WindowId; label: string; icon: string; color?: string; href?: string }[] = [
-  { id: 'shop_women', label: 'shop_women/', icon: '📁', color: 'var(--cyan)' },
-  { id: 'shop_men',   label: 'shop_men/',   icon: '📁', color: 'var(--purple)' },
+  { id: 'shop_women', label: 'shop_women/', icon: '📁', color: 'var(--purple)' },
+  { id: 'shop_men',   label: 'shop_men/',   icon: '📁', color: 'var(--cyan)' },
   { id: 'cart',       label: 'cart.exe',    icon: '🛒', color: 'var(--red)' },
   { id: 'readme',     label: 'readme.txt',  icon: '📄', color: 'var(--text-dim)' },
   { label: 'edax',    icon: '💾', color: '#0000FF', href: '/edax' },
