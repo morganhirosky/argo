@@ -12,7 +12,7 @@ export default function PissedPage() {
   return (
     <>
       <style>{`
-        body { margin: 0; background: #0000AA; }
+        body { margin: 0; background: #ffffff; }
 
         @keyframes scroll-up {
           0%   { transform: translateY(0); }
@@ -27,12 +27,13 @@ export default function PissedPage() {
           0%   { transform: translateY(-100%); }
           100% { transform: translateY(100vh); }
         }
+
       `}</style>
 
       <div style={{
         width: '100vw',
         height: '100dvh',
-        background: '#0000AA',
+        background: '#ffffff',
         position: 'relative',
         overflow: 'hidden',
         display: 'flex',
@@ -44,6 +45,7 @@ export default function PissedPage() {
         <div style={{
           position: 'absolute',
           inset: 0,
+          zIndex: 1,
           display: 'flex',
           flexDirection: 'row',
           gap: '0',
@@ -66,7 +68,7 @@ export default function PissedPage() {
                 style={{
                   fontFamily: "'Courier New', monospace",
                   fontSize: '10px',
-                  color: '#ffffff',
+                  color: '#000000',
                   letterSpacing: '0.04em',
                   lineHeight: '1.6',
                   writingMode: 'horizontal-tb',
@@ -108,9 +110,9 @@ export default function PissedPage() {
           animation: 'scanline 6s linear infinite',
         }} />
 
-        {/* Video with CSS filter to integrate it */}
+        {/* Video */}
         <video
-          src="/PISSED.mp4"
+          src="/grey-madman.mp4"
           autoPlay
           loop
           muted
@@ -123,11 +125,10 @@ export default function PissedPage() {
             position: 'relative',
             zIndex: 2,
             display: 'block',
-            maxWidth: '80vw',
-            maxHeight: '80dvh',
+            maxWidth: '60vw',
+            maxHeight: '60dvh',
             width: 'auto',
             height: 'auto',
-            mixBlendMode: 'normal',
           }}
         />
 
@@ -141,12 +142,12 @@ export default function PissedPage() {
             zIndex: 5,
             fontFamily: "'Courier New', monospace",
             fontSize: '10px',
-            color: 'rgba(255,255,255,0.25)',
+            color: 'rgba(0,0,0,0.25)',
             cursor: 'pointer',
             letterSpacing: '0.08em',
           }}
-          onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.6)')}
-          onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.25)')}
+          onMouseEnter={e => (e.currentTarget.style.color = 'rgba(0,0,0,0.6)')}
+          onMouseLeave={e => (e.currentTarget.style.color = 'rgba(0,0,0,0.25)')}
         >
           ← return to argo
         </span>
